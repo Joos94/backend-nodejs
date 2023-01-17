@@ -1,0 +1,84 @@
+#Este es mi archivo de docker que agrega un gestow web para administrar de manera visual la base de datos
+
+##version: '3.3'
+
+#services:
+#  db:
+#    container_name: db
+#    image: postgres:13
+#    restart: always
+#    environment:
+#      POSTGRES_DB: my_store
+#      POSTGRES_USER: admin123
+#      POSTGRES_PASSWORD: admin123
+#    ports:
+#      - 5432:5432
+#    volumes:
+#      - dbdata:/var/lib/postgresql/data
+#    networks:
+#      - app-network
+
+#  dbmanager:
+#    image: bitnami/phppgadmin:7
+#    restart: always
+#    environment:
+#      DATABASE_HOST: db
+#      DATABASE_PORT_NUMBER: 5432
+#      DATABASE_SSL_MODE: allow
+#      ALLOW_EMPTY_PASSWORD: yes
+#    ports:
+#      - 8081:8080
+#    depends_on:
+#      - db
+#    networks:
+#      - app-network
+
+#Docker Networks
+#networks:
+#  app-network:
+#    driver: bridge
+#Volumes
+#volumes:
+#  dbdata:
+#    driver: local
+
+version: '3.3'
+
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=my_store
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=123456
+    ports:
+      - 5433:5432
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@mail.com
+      - PGADMIN_DEFAULT_PASSWORD=123456
+    ports:
+      - 5050:80
+  mysql:
+    platform: linux/x86_64
+    image: mysql:5.7
+    environment:
+      - MYSQL_DATABASE=my_store
+      - MYSQL_USER=root
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_PORT=3307
+    ports:
+      - 3307:3306
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin123
+      - PMA_HOST=mysql
+    ports:
+      - 8181:80
